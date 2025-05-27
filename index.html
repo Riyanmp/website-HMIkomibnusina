@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HMI Komisaritat Ibnu Sina</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+  /* Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #0a100d;
+    color: #d7e3bc;
+    line-height: 1.7;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    position: fixed;
+    width: 100%;
+    background: #1b3a2a;
+    color: #d7e3bc;
+    padding: 1.25rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(10, 16, 13, 0.8);
+    top: 0;
+  }
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+  }
+
+  .logo-image {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: 8px;
+    background-color: #274b27;
+  }
+
+  .logo-text {
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: 2.5px;
+    user-select: none;
+    color: #a3c293;
+    transition: color 0.3s ease;
+  }
+  .logo-text:hover,
+  .logo-text:focus {
+    color: #e1f7d5;
+    outline: none;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 3rem;
+  }
+
+  nav ul li {
+    cursor: pointer;
+  }
+
+  nav ul li a {
+    color: #d7e3bc;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+    padding: 0.25rem 0;
+    border-bottom: 3px solid transparent;
+  }
+
+  nav ul li a:hover,
+  nav ul li a.active {
+    color: #a3c293;
+    border-bottom: 3px solid #a3c293;
+  }
+
+  /* Mobile menu button */
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 28px;
+    height: 22px;
+    cursor: pointer;
+  }
+
+  .menu-toggle div {
+    width: 100%;
+    height: 3.5px;
+    background: #d7e3bc;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  .menu-toggle.active div:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+  }
+  .menu-toggle.active div:nth-child(2) {
+    opacity: 0;
+  }
+  .menu-toggle.active div:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+  }
+
+  @media (max-width: 768px) {
+    nav {
+      position: fixed;
+      top: 70px;
+      right: 0;
+      background: #1b3a2a;
+      width: 220px;
+      height: calc(100vh - 70px);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      box-shadow: -4px 0 10px rgba(10, 16, 13, 0.8);
+      border-radius: 0 0 0 8px;
+    }
+
+    nav.open {
+      transform: translateX(0);
+    }
+
+    nav ul {
+      flex-direction: column;
+      padding: 3rem 1.5rem;
+      gap: 2rem;
+    }
+
+    header {
+      padding: 1.25rem 2rem;
+      justify-content: space-between;
+    }
+
+    .menu-toggle {
+      display: flex;
+    }
+  }
+
+  main {
+    margin-top: 90px;
+    flex-grow: 1;
+  }
+
+  section {
+    padding: 6rem 3rem;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  section:not(:last-child) {
+    margin-bottom: 5rem;
+  }
+
+  /* Welcome Section */
+  #profile {
+    background: linear-gradient(135deg, #2f4f2f 0%, #4a7c4a 100%);
+    color: #130507;
+    text-align: center;
+    padding: 8rem 3rem 4rem 3rem;
+    border-radius: 15px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  #profile h1 {
+    font-size: 2.4rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  #profile p {
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 3.5rem;
+  }
+
+  .leadership-container {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    gap: 5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .leader-card {
+    background: #274b27;
+    border-radius: 18px;
+    padding: 1.8rem;
+    box-shadow: 0 10px 30px rgba(25, 60, 26, 0.85);
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+  }
+
+  .leader-card:hover,
+  .leader-card:focus-within {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 44px rgba(40, 90, 40, 0.95);
+  }
+
+  .leader-photo {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 90px;
+    border: 4px solid #a3c293;
+    background-color: #3c683c;
+  }
+
+  .leader-name {
+    margin-top: 1.8rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #d7e3bc;
+    letter-spacing: 0.05em;
+  }
+
+  .leader-role {
+    font-size: 1rem;
+    color: #a3c293;
+    margin-top: 0.3rem;
+    font-weight: 600;
+  }
+
+  /* About Us */
+  #about {
+    background: #132913;
+    border-radius: 18px;
+  }
+
+  #about h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-weight: 700;
+    color: #a3c293;
+    font-size: 2.6rem;
+    letter-spacing: 1.2px;
+  }
+
+  #about p {
+    max-width: 900px;
+    margin: 0 auto;
+    font-weight: 400;
+    font-size: 1.2rem;
+    color: #c6ddb7;
+    line-height: 1.8;
+  }
+
+  /* Our Activities */
+  #activities {
+    background: #132913;
+    border-radius: 18px;
+  }
+
+  #activities h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-weight: 700;
+    color: #a3c293;
+    font-size: 2.6rem;
+    letter-spacing: 1.2px;
+  }
+
+  .activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+    gap: 3rem;
+  }
+
+  .activity-card {
+    background: #274b27;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(15, 34, 15, 0.8);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .activity-card:hover,
+  .activity-card:focus-within {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 48px rgba(36, 75, 36, 0.95);
+  }
+
+  .activity-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    filter: brightness(0.85);
+    transition: filter 0.3s ease;
+  }
+
+  .activity-card:hover img,
+  .activity-card:focus-within img {
+    filter: brightness(1);
+  }
+
+  .activity-content {
+    padding: 1.6rem 2rem;
+    flex-grow: 1;
+  }
+
+  .activity-content h3 {
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: #d0e3b8;
+    font-size: 1.4rem;
+    letter-spacing: 0.8px;
+  }
+
+  .activity-content p {
+    font-size: 1rem;
+    color: #c6ddb7;
+    line-height: 1.5;
+  }
+
+  /* Join Us Form and Contact Form Container */
+  .form-container {
+    background: #132913;
+    border-radius: 18px;
+    max-width: 1000x;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 3rem 3rem 3.5rem 3rem;
+  }
+
+  /* Form titles */
+  #join h2,
+  #contact h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-weight: 700;
+    color: #a3c293;
+    font-size: 2.6rem;
+    letter-spacing: 1.2px;
+  }
+
+  /* Forms wide with grid */
+  form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem 3rem;
+  }
+
+  /* Labels full width on top */
+  label {
+    grid-column: span 2;
+    font-weight: 600;
+    color: #a3c293;
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+  }
+
+  /* Inputs and textarea span based on field */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea {
+    padding: 1rem 1.2rem;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    border: 2px solid #4a7c4a;
+    background: #1a2f18;
+    color: #d7e3bc;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+  }
+
+  /* Textareas span 2 columns */
+  textarea {
+    grid-column: span 2;
+    min-height: 130px;
+    resize: vertical;
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="tel"]:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #a3c293;
+    background-color: #2c4f22;
+    box-shadow: 0 0 8px #a3c293;
+  }
+
+  /* Submit button spans two columns and right-aligned */
+  button[type="submit"] {
+    grid-column: span 2;
+    justify-self: end;
+    background-color: #4a7c4a;
+    color: #0a100d;
+    border: none;
+    padding: 1.2rem 3.5rem;
+    font-size: 1.25rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  button[type="submit"]:hover,
+  button[type="submit"]:focus {
+    background-color: #82b366;
+    color: #0a100d;
+    outline: none;
+  }
+
+  /* Contact Me */
+  /* Reuse form-container styling */
+  #contact {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 4rem;
+  }
+
+  #contact p {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-size: 1.15rem;
+    color: #c6ddb7;
+  }
+
+  /* Footer */
+  footer {
+    background: #1b3a2a;
+    color: #bccc9a;
+    text-align: center;
+    padding: 3rem 2rem 2rem 2rem;
+    font-size: 1rem;
+    margin-top: auto;
+    letter-spacing: 0.04em;
+  }
+
+  footer .footer-content {
+    max-width: 900px;
+    margin: 0 auto 1.5rem auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2.5rem;
+  }
+
+  footer .footer-content > div {
+    min-width: 180px;
+  }
+
+  footer h3 {
+    color: #82b366;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  footer a {
+    color: #bccc9a;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  footer a:hover,
+  footer a:focus {
+    color: #e1f7d5;
+    outline: none;
+  }
+
+  .social-links a {
+    font-size: 1.6rem;
+    margin: 0 0.6rem;
+    display: inline-block;
+    transition: color 0.3s ease;
+  }
+
+  .social-links a:hover,
+  .social-links a:focus {
+    color: #e1f7d5;
+    outline: none;
+  }
+
+  /* Back to top button */
+  #backToTop {
+    margin-top: 1.5rem;
+    display: inline-block;
+    cursor: pointer;
+    color: #a3c293;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  #backToTop:hover,
+  #backToTop:focus {
+    color: #e1f7d5;
+    outline: none;
+  }
+
+  /* Responsive footer */
+  @media (max-width: 600px) {
+    footer .footer-content {
+      flex-direction: column;
+      text-align: center;
+      gap: 1.8rem;
+    }
+    .leadership-container {
+      gap: 3rem;
+    }
+  }
+
+  /* Responsive form for smaller screens */
+  @media (max-width: 700px) {
+    form {
+      grid-template-columns: 1fr !important;
+    }
+
+    label,
+    textarea,
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    button[type="submit"] {
+      grid-column: span 1 !important;
+      width: 100%;
+    }
+
+    button[type="submit"] {
+      justify-self: stretch !important;
+    }
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-container" tabindex="0" aria-label="HMI Komisaritat Ibnu Sina Logo" role="link" onclick="scrollToSection('#welcome')" onkeypress="if(event.key === 'Enter') scrollToSection('#welcome')">
+    <img src="img/logo.jpg" alt="Logo HMI Komisaritat Ibnu Sina" class="logo-image" />
+    <div class="logo-text">HMI Komisaritat Ibnu Sina</div>
+  </div>
+  <div class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" role="button" aria-expanded="false" tabindex="0">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  <nav id="navMenu" aria-label="Primary navigation">
+    <ul>
+      <li><a href="#profile" class="active">profile</a></li>
+      <li><a href="#about">About Us</a></li>
+      <li><a href="#activities">Our Activities</a></li>
+      <li><a href="#join">Join Us</a></li>
+      <li><a href="#contact">Contact Me</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section id="profile" tabindex="0" aria-label="Welcome section">
+    <h1>Welcome to Organisasi HMI Kom Ibnu Sina</h1>
+    <p>DENGAN IMAN ILMU DAN AMAL KITA BERJUANG, YAKIN USAHA SAMPAI!!.</p>
+
+    <div class="leadership-container" aria-label="Leadership of the organization">
+      <div class="leader-card" tabindex="0" aria-label="Ketua Umum">
+        <img src="img/ketum.jpg" alt="Photo Ketua Umum" class="leader-photo" />
+        <div class="leader-name">ZAINUL JAGAT</div>
+        <div class="leader-role">Ketua Umum</div>
+      </div>
+      <div class="leader-card" tabindex="0" aria-label="Wakil Ketua Umum">
+        <img src="img/waketum.jpg" alt="Photo Wakil Ketua Umum" class="leader-photo" />
+        <div class="leader-name">DENDI SEPRIAN</div>
+        <div class="leader-role">Wakil Ketua Umum</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" tabindex="0" aria-label="About us section">
+    <h2>About Us</h2>
+    <p>Himpunan Mahasiswa Islam (HMI) Komisaritat Ibnu Sina adalah sebuah organisasi mahasiswa yang berdedikasi untuk mengembangkan potensi dan wawasan keislaman dan kepemimpinan para anggotanya. Kami percaya bahwa generasi muda memiliki peran penting dalam membangun bangsa melalui pendidikan, dakwah, dan pengabdian masyarakat.</p>
+  </section>
+
+  <section id="activities" tabindex="0" aria-label="Our activities section">
+    <h2>Our Activities</h2>
+    <div class="activities-grid" role="list">
+      <article class="activity-card" role="listitem" tabindex="0" aria-label="Activity: Social Community Service">
+        <!-- Replace src with your image URL -->
+        <img src="img/pelantikan pengurus.jpg" alt="Social Community Service" />
+        <div class="activity-content">
+          <h3>pelantikan Pengurus Kom Ibnu Sina 2024/2025</h3>
+          <p>Kegiatan pengabdian masyarakat dengan membersihkan lingkungan dan memberikan bantuan sosial kepada warga sekitar untuk meningkatkan kepedulian sosial dan solidaritas.</p>
+        </div>
+      </article>
+
+      <article class="activity-card" role="listitem" tabindex="0" aria-label="Activity: Educational Workshop">
+        <img src="img/rapat hmi.jpg" alt="Educational Workshop" />
+        <div class="activity-content">
+          <h3>Diskusi Mingguan</h3>
+          <p>Pelatihan dan seminar kepemimpinan, pengembangan diri, dan keislaman untuk menambah wawasan dan keterampilan anggota.</p>
+        </div>
+      </article>
+
+      <article class="activity-card" role="listitem" tabindex="0" aria-label="Activity: Cultural Event">
+        <img src="img/pembukaan lk1.jpg" alt="Cultural Event" />
+        <div class="activity-content">
+          <h3>Acara Pembukaan LK1 Kom Ibnu Sina 2024/2025</h3>
+          <p>Kegiatan pelestarian budaya melalui pertunjukan seni tradisional dan pengenalan nilai budaya Islam kepada generasi muda.</p>
+        </div>
+      </article>
+
+      <article class="activity-card" role="listitem" tabindex="0" aria-label="Activity: Charity Fundraising">
+        <img src="img/makrab.jpg" alt="Charity Fundraising" />
+        <div class="activity-content">
+          <h3>Makrab HMI Kom Ibnu Sina</h3>
+          <p>Penggalangan dana untuk membantu meringankan beban ekonomi masyarakat kurang mampu dan mendukung program pengembangan sosial.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="join" class="form-container" tabindex="0" aria-label="Join us section">
+    <h2>Join Us</h2>
+    <form id="joinForm" novalidate>
+      <label for="name">Full Name *</label>
+      <input type="text" id="name" name="name" placeholder="Your full name" required />
+
+      <label for="email">Email Address *</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required />
+
+      <label for="phone">Phone Number *</label>
+      <input type="tel" id="phone" name="phone" placeholder="e.g. +62 812 3456 7890" required />
+
+      <label for="motivation">Why do you want to join? *</label>
+      <textarea id="motivation" name="motivation" placeholder="Your motivation to join HMI Kom Ibnu Sina" required></textarea>
+
+      <button type="submit">Submit Registration</button>
+    </form>
+  </section>
+
+  <section id="contact" class="form-container" tabindex="0" aria-label="Contact me section">
+    <h2>Contact Me</h2>
+    <p>If you have any questions or want to reach out, feel free to send us a message.</p>
+    <form id="contactForm" novalidate>
+      <label for="contactName">Name *</label>
+      <input type="text" id="contactName" name="contactName" placeholder="Your name" required />
+
+      <label for="contactEmail">Email *</label>
+      <input type="email" id="contactEmail" name="contactEmail" placeholder="your.email@example.com" required />
+
+      <label for="contactMessage">Message *</label>
+      <textarea id="contactMessage" name="contactMessage" placeholder="Your message here" required></textarea>
+
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+</main>
+
+<footer aria-label="Website footer">
+  <div class="footer-content">
+    <div>
+      <h3>HMI Komisaritat Ibnu Sina</h3>
+      <p>Dedicated to shaping future leaders through faith, knowledge, and service.</p>
+    </div>
+    
+    <div>
+      <h3>Contact</h3>
+      <p>Email: info@hmiibnusina.com</p>
+      <p>Phone : <a href="https://www.instagram.com/mpebrian_/?next=%2F" class="text-white fw-bold">+62 82340702907</a></p>
+      
+    </div>
+  </div>
+  <p style="margin-top:1.5rem;">© 2024 HMI Komisaritat Ibnu Sina. All rights reserved.</p>
+</footer>
+
+<script>
+  const navLinks = document.querySelectorAll("nav ul li a");
+  const navMenu = document.getElementById('navMenu');
+  const menuToggle = document.getElementById('menuToggle');
+
+  function scrollToSection(selector) {
+    document.querySelector(selector).scrollIntoView({behavior: 'smooth'});
+  }
+
+  function setActiveLink() {
+    let index = navLinks.length;
+
+    while(--index && window.scrollY + 140 < document.querySelector(navLinks[index].hash).offsetTop) {}
+    
+    navLinks.forEach((link) => link.classList.remove('active'));
+    navLinks[index].classList.add('active');
+  }
+
+  setActiveLink();
+  window.addEventListener('scroll', setActiveLink);
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      if(navMenu.classList.contains('open')) {
+        toggleMenu();
+      }
+      scrollToSection(link.hash);
+    });
+  });
+
+  document.querySelector('.logo-container').addEventListener('click', () => scrollToSection('#welcome'));
+  document.querySelector('.logo-container').addEventListener('keypress', e => {
+    if(e.key === 'Enter') scrollToSection('#welcome')
+  });
+
+  function toggleMenu() {
+    const isOpen = navMenu.classList.toggle('open');
+    menuToggle.classList.toggle('active');
+    menuToggle.setAttribute('aria-expanded', isOpen.toString());
+  }
+
+  menuToggle.addEventListener('click', toggleMenu);
+  menuToggle.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleMenu();
+    }
+  });
+
+  function validateForm(form) {
+    let valid = form.checkValidity();
+    if (!valid) {
+      form.reportValidity();
+    }
+    return valid;
+  }
+
+  document.getElementById('joinForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const form = e.target;
+    if (validateForm(form)) {
+      alert('Thank you for registering with HMI Komisaritat Ibnu Sina! We will contact you soon.');
+      form.reset();
+    }
+  });
+
+  document.getElementById('contactForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const form = e.target;
+    if (validateForm(form)) {
+      alert('Your message has been sent. We will get back to you shortly.');
+      form.reset();
+    }
+  });
+
+  document.getElementById('backToTop').addEventListener('click', e => {
+    e.preventDefault();
+    scrollToSection('#welcome');
+  });
+  document.getElementById('backToTop').addEventListener('keypress', e => {
+    if(e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      scrollToSection('#welcome');
+    }
+  });
+</script>
+
+</body>
+</html>
